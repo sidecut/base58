@@ -9,16 +9,6 @@ import (
 	"github.com/btcsuite/btcutil/base58"
 )
 
-// From https://rosettacode.org/wiki/Check_output_device_is_a_terminal#Go
-func isTerminal() bool {
-	fileInfo, err := os.Stdout.Stat()
-	if err != nil {
-		panic(err)
-	}
-
-	return (fileInfo.Mode() & os.ModeCharDevice) != 0
-}
-
 func encodeBytes(r *bytes.Buffer, w io.Writer) {
 	sourceBytes := r.Bytes()
 	encoded := base58.Encode(sourceBytes)
@@ -77,10 +67,5 @@ func main() {
 
 	case *decFlag:
 		decodeString(source, os.Stdout)
-	}
-
-	if isTerminal() {
-		// Pretty-print by adding a newline to the output
-		println()
 	}
 }
