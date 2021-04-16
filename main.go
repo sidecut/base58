@@ -9,6 +9,8 @@ import (
 	"github.com/btcsuite/btcutil/base58"
 )
 
+const MAX_BYTES = 1024 * 1024
+
 func encodeBytes(r *bytes.Buffer, w io.Writer) {
 	sourceBytes := r.Bytes()
 	encoded := base58.Encode(sourceBytes)
@@ -16,7 +18,7 @@ func encodeBytes(r *bytes.Buffer, w io.Writer) {
 }
 
 func decodeString(r io.Reader, w io.Writer) {
-	sourceBytes := make([]byte, 1024)
+	sourceBytes := make([]byte, MAX_BYTES)
 	n, err := r.Read(sourceBytes)
 	if err != nil {
 		panic(err)
@@ -53,7 +55,7 @@ func main() {
 
 	var source *bytes.Buffer
 	// stdin
-	var b []byte = make([]byte, 1024)
+	var b []byte = make([]byte, MAX_BYTES)
 	n, err := os.Stdin.Read(b)
 	if err != nil {
 		panic(err)
