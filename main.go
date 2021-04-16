@@ -57,7 +57,7 @@ func main() {
 	// stdin
 	var b []byte = make([]byte, MAX_BYTES)
 	n, err := os.Stdin.Read(b)
-	if err != nil {
+	if err != nil && err != io.EOF {
 		panic(err)
 	}
 	b = b[0:n]
