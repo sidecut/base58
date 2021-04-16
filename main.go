@@ -31,28 +31,26 @@ func main() {
 	if *numberFlag > 1024 {
 		panic("-n is limited to 1024 bytes")
 	}
-	if *numberFlag > 0 {
-		*encFlag = true
-
-		if *decFlag {
-			panic("Cannot specify -d and -e.  (-e is implied by -n)")
-		}
-
-		randBytes := make([]byte, *numberFlag)
-		_, err := rand.Read(randBytes)
-		if err != nil {
-			panic(err)
-		}
-
-		encrypted := base58.Encode(randBytes)
-		print(encrypted)
-
-		if isTerminal() {
-			// Pretty-print by adding a newline to the output
-			println()
-		}
-
-	} else {
+	if *numberFlag <= 0 {
 		panic("Piping stdin is not currently supported")
+	}
+	*encFlag = true
+
+	if *decFlag {
+		panic("Cannot specify -d and -e.  (-e is implied by -n)")
+	}
+
+	randBytes := make([]byte, *numberFlag)
+	_, err := rand.Read(randBytes)
+	if err != nil {
+		panic(err)
+	}
+
+	encrypted := base58.Encode(randBytes)
+	print(encrypted)
+
+	if isTerminal() {
+		// Pretty-print by adding a newline to the output
+		println()
 	}
 }
