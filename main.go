@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"crypto/rand"
 	"flag"
 	"io"
 	"os"
@@ -50,8 +49,6 @@ func getSuppliedFlags() map[string]*flag.Flag {
 func main() {
 	encFlag := flag.Bool("e", true, "Encode")
 	decFlag := flag.Bool("d", false, "Decode")
-	numberFlag := flag.Int("n", 0, "Number of random bytes to generate.  Implies -e.  "+
-		"If absent, read from stdin")
 	flag.Parse()
 
 	suppliedFlags := getSuppliedFlags()
@@ -64,28 +61,15 @@ func main() {
 		*encFlag = false
 	}
 
-	if *numberFlag > 1024 {
-		panic("-n is limited to 1024 bytes")
-	}
 	var source *bytes.Buffer
-	if *numberFlag <= 0 {
-		// stdin
-		var b []byte = make([]byte, 1024)
-		n, err := os.Stdin.Read(b)
-		if err != nil {
-			panic(err)
-		}
-		b = b[0:n]
-		source = bytes.NewBuffer(b)
-	} else {
-		// TODO: can't decode random bytes
-		randBytes := make([]byte, *numberFlag)
-		_, err := rand.Read(randBytes)
-		if err != nil {
-			panic(err)
-		}
-		source = bytes.NewBuffer(randBytes)
+	// stdin
+	var b []byte = make([]byte, 1024)
+	n, err := os.Stdin.Read(b)
+	if err != nil {
+		panic(err)
 	}
+	b = b[0:n]
+	source = bytes.NewBuffer(b)
 
 	switch {
 	case *encFlag:
